@@ -1,0 +1,22 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+build/
+dist/
+*.spec
+*.log
+results*.txt
+results*.json
+
+# Local development and test material is excluded from publication.
+/tests/
+/verification/
+/examples/
+/run_ff_test.bat
+/fitgirl-ff-link-extractor/
+/.publish/
+.env
+.env.*
+.codex/
+.agents/

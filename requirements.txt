@@ -1,0 +1,4 @@
+# Browser engine used by the supplied fitgirl-ff-link-extractor reference.
+setuptools>=75
+selenium>=4.16,<5
+undetected-chromedriver>=3.5.5,<4

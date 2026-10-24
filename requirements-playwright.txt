@@ -1,0 +1,2 @@
+# Optional, for the earlier experimental engine (--engine auto).
+playwright>=1.56,<2
