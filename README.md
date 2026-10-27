@@ -1,6 +1,8 @@
 # FFGraber
 
-FuckingFast 파일 URL 여러 개를 받아 최종 다운로드 주소를 수집하는 한국어 데스크톱 프로그램입니다. Chrome과 Edge를 지원하며 GUI와 CLI로 실행할 수 있습니다.
+[English](README.en.md)
+
+FuckingFast 파일 URL 여러 개를 받아 최종 다운로드 주소를 수집하는 데스크톱 프로그램입니다. 한국어·영어, Chrome·Edge, GUI·CLI를 지원합니다.
 
 ## 기능
 
@@ -8,6 +10,8 @@ FuckingFast 파일 URL 여러 개를 받아 최종 다운로드 주소를 수집
 - XHR 응답의 `HX-Redirect` / `Location` 헤더에서 최종 URL 수집
 - 실제 파일 다운로드 차단
 - 성공 URL 전체 복사, 선택 URL 복사, 우클릭 메뉴
+- 추출 URL 탭의 전용 복사 버튼과 추출 링크 개수 표시
+- 한국어 / English 즉시 전환 및 언어 설정 저장
 - 하이퍼링크 붙여넣기 시 실제 URL로 자동 변환 (Ctrl+V 지원)
 - 중복 제거, TXT/JSON 저장
 - 중지와 실패 항목 재시도, 부분 결과 보존
@@ -36,10 +40,22 @@ FuckingFast 파일 URL을 한 줄에 하나씩 붙여 넣고 **추출 시작**�
 
 ## URL 복사
 
+- **추출 URL** 탭 위의 **추출한 링크 복사** 버튼: 성공한 최종 다운로드 주소를 바로 복사합니다. 성공한 주소가 생기면 활성화되며, 옆에 중복을 제거한 개수를 표시합니다. 추출 도중에도 완료된 주소를 복사할 수 있습니다.
 - **성공 URL 전체 복사** 또는 `Ctrl+Shift+C`: 성공한 최종 주소 전체를 줄바꿈으로 복사합니다.
 - **선택 URL 복사**, 결과표의 `Ctrl+C`, 우클릭 메뉴: 선택한 성공 항목만 복사합니다.
 - 실패·대기 항목과 중복 URL은 제외합니다. 복사할 주소가 없으면 기존 클립보드를 유지합니다.
 - **FF 페이지 링크 복사**는 원본 파일 페이지 주소를 복사합니다.
+
+## 언어 설정
+
+창 오른쪽 위의 **언어 / Language**에서 **한국어** 또는 **English**를 선택합니다. 입력과 결과를 유지하면서 화면·상태·프로그램 안내 메시지가 즉시 전환됩니다. Windows에서는 선택한 언어를 `%APPDATA%\FFGraber\settings.json`에 저장하여 다음 실행에도 적용합니다. 브라우저와 드라이버가 제공하는 기술 오류는 원문을 유지할 수 있습니다.
+
+CLI 언어는 `--language ko` 또는 `--language en`으로 지정합니다.
+
+```powershell
+start.bat --language en
+.\.venv\Scripts\python.exe -m ffgraber --language en --help
+```
 
 ## CLI
 

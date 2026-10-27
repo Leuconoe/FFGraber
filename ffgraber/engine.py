@@ -8,6 +8,7 @@ import time
 from urllib.parse import urlsplit
 
 from .links import Candidate, FILECRYPT_HOSTS, discover, display_name, kind_of, normalize_url, url_key
+from .i18n import translate
 from .models import Record
 
 
@@ -20,6 +21,7 @@ class Options:
     max_pages: int = 1500
     max_depth: int = 8
     headless: bool = False
+    language: str = "ko"
 
 
 # Installed before page scripts run, including after navigation. Only a known
@@ -62,12 +64,14 @@ class ExtractionEngine:
         self._background = set()
 
     def update(self, record, **changes):
+        if changes.get("error"):
+            changes["error"] = translate(changes["error"], self.options.language)
         for key, value in changes.items():
             setattr(record, key, value)
         self.emit({"type": "record", "record": asdict(record)})
 
     def log(self, message):
-        self.emit({"type": "log", "message": message})
+        self.emit({"type": "log", "message": translate(message, self.options.language)})
 
     def _capture(self, value, base=""):
         try:
