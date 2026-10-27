@@ -9,6 +9,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
 from . import __version__
+from .clipboard import paste_content, read_html_clipboard
 from .engine import ExtractionEngine, Options
 from .links import parse_input, url_key
 from .models import Record, direct_download_links, export_records, output_links
@@ -60,6 +61,7 @@ class App:
         self.input = tk.Text(inputs, height=3, wrap="word", font=("Consolas", 10), undo=True)
         self.input.pack(fill="x")
         self.input.bind("<Control-Return>", lambda event: self.start())
+        self.input.bind("<<Paste>>", self.paste)
         controls = ttk.Frame(inputs)
         controls.pack(fill="x", pady=(8, 0))
         ttk.Button(controls, text="클립보드 붙여넣기", command=self.paste).pack(side="left")
@@ -75,6 +77,8 @@ class App:
         self.resolve = ttk.Checkbutton(inputs, text="최종 다운로드 URL까지 추출 (끄면 FuckingFast 페이지 링크만 수집)",
                                        variable=self.resolve_var)
         self.resolve.pack(anchor="w", pady=(8, 0))
+        ttk.Label(inputs, text="웹페이지에서 복사한 하이퍼링크도 실제 URL로 자동 변환합니다. Ctrl+V로 붙여넣을 수 있습니다.",
+                  foreground="#62676d").pack(anchor="w", pady=(6, 0))
         actions = ttk.Frame(body)
         actions.pack(fill="x", pady=10)
         self.start_button = ttk.Button(actions, text="추출 시작", command=self.start)
@@ -158,16 +162,31 @@ class App:
         widget.see("end")
         widget.configure(state="disabled")
 
-    def paste(self):
+    def paste(self, event=None):
         if self.busy():
-            return
+            return "break"
+        html = read_html_clipboard()
         try:
             text = self.root.clipboard_get()
         except tk.TclError:
-            self.status_var.set("클립보드에 텍스트가 없습니다.")
-            return
-        self.input.delete("1.0", "end")
-        self.input.insert("1.0", text)
+            text = ""
+        content = paste_content(text, html)
+        if not content:
+            self.status_var.set("클립보드에 텍스트나 하이퍼링크가 없습니다.")
+            return "break"
+        self.input.edit_separator()
+        if event is None:
+            self.input.replace("1.0", "end-1c", content)
+        else:
+            if self.input.tag_ranges("sel"):
+                self.input.replace("sel.first", "sel.last", content)
+                self.input.tag_remove("sel", "1.0", "end")
+            else:
+                self.input.insert("insert", content)
+        self.input.edit_separator()
+        self.input.see("insert")
+        self.status_var.set("붙여넣기 완료 · 하이퍼링크는 실제 URL로 변환됩니다.")
+        return "break"
 
     def busy(self):
         return self.worker is not None and self.worker.is_alive()
